@@ -7,7 +7,7 @@ import { DnsModule } from './modules/dns/dns.module';
 @Module({
   imports: [
     ClientsModule,
-    DatabaseModule,
+    //DatabaseModule,
     DnsModule,
   ],
   controllers: [AppController],
