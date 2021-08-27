@@ -103,7 +103,7 @@ class ConfigService {
 const configService = new ConfigService(process.env).ensureValues([
   // 'POSTGRES_TIMEZONE',
   // 'POSTGRES_LOGGING',
-  'DATABASE_URL',
+  //'DATABASE_URL',
   // 'JWT_SECRET',
   // 'REDIS_URL'
 ]);
