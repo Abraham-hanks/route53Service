@@ -40,7 +40,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: 0,
-      error : error || exception
+      error : error.length > 0 ? error : exception
     });
   }
 
