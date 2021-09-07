@@ -3,7 +3,7 @@ import * as AWS from 'aws-sdk';
 import { CHANGE_RESOURCE_RECORD_SETS_ACTION, DNS_RECORD_TYPE, RECORD_REPOSITORY } from '../constants';
 import { CreateRecordDto } from '../create-record.dto';
 import { RecordModel as Record } from '../record.model';
-import { CloudfrontService } from './cloud-front.service';
+import { CloudfrontService } from './cloudfront.service';
 
 const route53 = new AWS.Route53({apiVersion: '2013-04-01'});
 

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CHANGE_RESOURCE_RECORD_SETS_ACTION } from './constants';
 import { CreateRecordDto } from './create-record.dto';
-import { CloudfrontService } from './services/cloud-front.service';
+import { CloudfrontService } from './services/cloudfront.service';
 import { DnsService } from './services/dns.service';
 
 @ApiTags('DNS')
