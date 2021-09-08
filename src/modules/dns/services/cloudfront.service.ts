@@ -1,39 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
+import { ERROR_MESSAGES } from 'src/common/utils/error-messages';
+import { DistributionQueryFiltersDto } from '../dto/distribution-query-filters.dto';
 
-const route53 = new AWS.Route53({apiVersion: '2013-04-01'});
 const cloudfront = new AWS.CloudFront({apiVersion: '2020-05-31'});
 
 @Injectable()
 export class CloudfrontService {
   constructor() { }
 
-  async listDistributions() {
+  async listDistributions(query?: DistributionQueryFiltersDto): Promise<AWS.CloudFront.ListDistributionsResult> {
+    var params = {
+      Marker: query.marker || '',
+      MaxItems: query.max_items || '',
+    }
     try {
-      const distributionList = await cloudfront.listDistributions().promise()
-
-      return distributionList;
-      
+      return await cloudfront.listDistributions(params).promise();
     } catch (error) {
       throw error
     }
   }
 
-  async getById(id = '') {
+  async getDistributionById(id: string): Promise<AWS.CloudFront.GetDistributionResult> {
     try {
-      const distribution = await cloudfront.getDistribution({Id: 'E2SLOJW43MEYI'}).promise();
-
-      return distribution
+      return await cloudfront.getDistribution({ Id: id }).promise();
     } catch (error) {
       throw error      
     }
   }
 
-  async getConfig(id = '') {
+  async getDistributionByDomainName(domainName: string) {
     try {
-      const distributionConfig = await cloudfront.getDistributionConfig({Id: 'E2SLOJW43MEYI'}).promise();
+      let distribution: AWS.CloudFront.DistributionSummary;
 
-      return distributionConfig
+      const distributionList = await cloudfront.listDistributions().promise();
+      var list = distributionList.DistributionList;
+              
+      if (list.Items && list.Items.length > 0)
+        distribution = list.Items.find( item => item.DomainName === domainName )
+
+      if (!distribution)
+        throw new BadRequestException(ERROR_MESSAGES.DistributionNotFound)
+
+      return distribution
+      
+    } catch (error) {
+      throw error 
+    }
+  }
+
+  async getDistributionConfig(id: string): Promise<AWS.CloudFront.GetDistributionConfigResult> {
+    try {
+      return await cloudfront.getDistributionConfig({Id: id}).promise();
     } catch (error) {
       throw error      
     }
@@ -41,7 +59,7 @@ export class CloudfrontService {
 
   async addAlias(alias: string) {
     try {
-      const config = await this.getConfig();
+      const config = await this.getDistributionConfig('E2SLOJW43MEYI');
       var DistributionConfig
 
       if(config.DistributionConfig) {

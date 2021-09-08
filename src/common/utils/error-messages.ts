@@ -1,4 +1,7 @@
 export enum ERROR_MESSAGES {
+
+  // distributions
+  DistributionNotFound = "Distribution not found",
   
   // audit
   AuditNotFound = "Audit not found",
