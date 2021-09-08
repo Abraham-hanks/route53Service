@@ -24,22 +24,6 @@ export class DnsController {
     return this.dnsService.getHostedZonesByName();
   }
 
-  @Get('distributions')
-  async getDistributions() {
-    return this.cloudfrontService.listDistributions();
-  }
-
-  @Get('distributions/id')
-  async getDistributionById() {
-    return this.cloudfrontService.getById();
-  }
-
-  @Get('distributions/id/config')
-  async getDistributionConfig() {
-    return this.cloudfrontService.getConfig();
-  }
-
-
   @Post('changeResourceRecordSets')
   async createChangeResourceRecordSets(
     @Body() newRecord: CreateRecordDto
