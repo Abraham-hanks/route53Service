@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { CHANGE_RESOURCE_RECORD_SETS_ACTION, DNS_RECORD_TYPE, RECORD_REPOSITORY } from '../constants';
-import { CreateRecordDto } from '../create-record.dto';
+import { CreateRecordDto } from '../dto/create-record.dto';
 import { RecordModel as Record } from '../record.model';
 import { CloudfrontService } from './cloudfront.service';
 
