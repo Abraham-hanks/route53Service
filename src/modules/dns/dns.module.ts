@@ -14,6 +14,10 @@ import { DnsService } from './services/dns.service';
     DnsService,
     CloudfrontService,
     ...DnsProvider
+  ],
+  exports: [ 
+    DnsService, 
+    CloudfrontService
   ]
 })
 export class DnsModule {}

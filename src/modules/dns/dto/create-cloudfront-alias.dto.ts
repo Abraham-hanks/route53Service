@@ -2,7 +2,7 @@ import { ApiHideProperty } from "@nestjs/swagger";
 import { IsOptional, IsString, IsUrl } from "class-validator";
 import { CHANGE_RESOURCE_RECORD_SETS_ACTION } from "../constants";
 
-export class CreateRecordDto {
+export class CreateCloudfrontAliasDto {
   @ApiHideProperty()
   @IsOptional()
   action? = CHANGE_RESOURCE_RECORD_SETS_ACTION.create;

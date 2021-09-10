@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
+import { CloudFront } from 'aws-sdk';
 import { ERROR_MESSAGES } from 'src/common/utils/error-messages';
 import { DistributionQueryFiltersDto } from '../dto/distribution-query-filters.dto';
 
@@ -9,11 +10,12 @@ const cloudfront = new AWS.CloudFront({apiVersion: '2020-05-31'});
 export class CloudfrontService {
   constructor() { }
 
-  async listDistributions(query?: DistributionQueryFiltersDto): Promise<AWS.CloudFront.ListDistributionsResult> {
-    var params = {
+  async listDistributions(query?: DistributionQueryFiltersDto): Promise<CloudFront.ListDistributionsResult> {  
+    let params = {
       Marker: query.marker || '',
       MaxItems: query.max_items || '',
     }
+
     try {
       return await cloudfront.listDistributions(params).promise();
     } catch (error) {
@@ -21,7 +23,7 @@ export class CloudfrontService {
     }
   }
 
-  async getDistributionById(id: string): Promise<AWS.CloudFront.GetDistributionResult> {
+  async getDistributionById(id: string): Promise<CloudFront.GetDistributionResult> {
     try {
       return await cloudfront.getDistribution({ Id: id }).promise();
     } catch (error) {
@@ -29,7 +31,7 @@ export class CloudfrontService {
     }
   }
 
-  async getDistributionByDomainName(domainName: string) {
+  async getDistributionByDomainName(domainName: string): Promise<CloudFront.DistributionSummary> {
     try {
       let distribution: AWS.CloudFront.DistributionSummary;
 
@@ -49,7 +51,7 @@ export class CloudfrontService {
     }
   }
 
-  async getDistributionConfig(id: string): Promise<AWS.CloudFront.GetDistributionConfigResult> {
+  async getDistributionConfig(id: string): Promise<CloudFront.GetDistributionConfigResult> {
     try {
       return await cloudfront.getDistributionConfig({Id: id}).promise();
     } catch (error) {
@@ -57,9 +59,10 @@ export class CloudfrontService {
     }
   }
 
-  async addAlias(alias: string) {
+  async addAlias(alias: string, cloudfront_url: string) {
     try {
-      const config = await this.getDistributionConfig('E2SLOJW43MEYI');
+      const distribution = await this.getDistributionByDomainName(cloudfront_url)
+      const config = await this.getDistributionConfig(distribution.Id);
       var DistributionConfig
 
       if(config.DistributionConfig) {
@@ -69,7 +72,7 @@ export class CloudfrontService {
       }
       const params = {
         DistributionConfig,
-        Id: 'E2SLOJW43MEYI',
+        Id: distribution.Id,
         IfMatch: config.ETag
       }
 
@@ -78,5 +81,4 @@ export class CloudfrontService {
       throw error
     }
   }
-
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DistributionQueryFiltersDto } from '../dto/distribution-query-filters.dto';
 import { CloudfrontService } from '../services/cloudfront.service';
@@ -10,12 +10,14 @@ export class CloudfrontController {
     private readonly cloudfrontService: CloudfrontService,
   ) {}
 
-  @Get('distributions')
-  async getDistributions(@Query() query: DistributionQueryFiltersDto) {
+  @Get('distribution')
+  async getDistribution(
+    @Query() query: DistributionQueryFiltersDto
+  ) {
     return this.cloudfrontService.listDistributions(query);
   }
 
-  @Get('distributions/:id')
+  @Get('distribution/:id')
   async getDistributionById(
     @Param('id') id: string,
   ) {
