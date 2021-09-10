@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DistributionQueryFiltersDto } from '../dto/distribution-query-filters.dto';
 import { CloudfrontService } from '../services/cloudfront.service';
