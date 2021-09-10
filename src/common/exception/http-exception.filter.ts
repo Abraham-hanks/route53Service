@@ -1,10 +1,9 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Injectable } from '@nestjs/common';
-// import * as lodash from 'lodash';
+import * as lodash from 'lodash';
 // import * as Sentry from '@sentry/node';
 import { ERROR_MESSAGES } from '../utils/error-messages';
 import { configService } from '../config/config.service';
-
-
+import { ValidationError } from 'sequelize';
 
 @Catch()
 @Injectable()
@@ -17,6 +16,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let error: Error[] = [];
+    let aws_error_response = []
 
     if (!configService.isProduction)
       console.log('error: ' + (exception));
@@ -28,19 +28,23 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
 
     // Sequelize ValidationError
-    // else if (exception instanceof ValidationError) {
-    //   status = HttpStatus.BAD_REQUEST;
-    //   error = this.extractSequelizeValidationError(exception);
-    // }
+    else if (exception instanceof ValidationError) {
+      status = HttpStatus.BAD_REQUEST;
+      error = this.extractSequelizeValidationError(exception);
+    }
 
     // Sequelize DatabaseError
     else if (exception['name'] === 'SequelizeDatabaseError') {
       error.push({ message: ERROR_MESSAGES.InternalServerError });
     }
 
+    else {
+      aws_error_response.push(exception)
+    }
+
     response.status(status).json({
       statusCode: 0,
-      error : error.length > 0 ? error : exception
+      error : error.length > 0 ? error : aws_error_response
     });
   }
 
@@ -74,11 +78,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
   }
 
-  // private extractSequelizeValidationError(exception: ValidationError): Error[] {
-  //   return exception.errors.map((obj) =>
-  //     lodash.pick(obj, ['message', 'type', 'path', 'value'])
-  //   );
-  // }
+  private extractSequelizeValidationError(exception: ValidationError): Error[] {
+    return exception.errors.map((obj) =>
+      lodash.pick(obj, ['message', 'type', 'path', 'value'])
+    );
+  }
 }
 
 class Error {
