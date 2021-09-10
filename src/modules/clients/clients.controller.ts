@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CHANGE_RESOURCE_RECORD_SETS_ACTION } from '../dns/constants';
 import { CreateRecordDto } from '../dns/dto/create-record.dto';
 import { CloudfrontService } from '../dns/services/cloudfront.service';
@@ -6,6 +7,7 @@ import { DnsService } from '../dns/services/dns.service';
 import { CreateDomainDto } from './dto/create-domain.dto';
 import { CreateSubdomainDto } from './dto/create-subdomain.dto';
 
+@ApiTags('Client')
 @Controller('client')
 export class ClientsController {
   constructor(
