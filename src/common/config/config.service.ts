@@ -101,8 +101,9 @@ class ConfigService {
 
 // enusre the values exist in .env on app startup, else throw error
 const configService = new ConfigService(process.env).ensureValues([
-  // 'POSTGRES_TIMEZONE',
-  // 'POSTGRES_LOGGING',
+  'AWS_ACCESS_KEY_ID',
+  'AWS_SECRET_ACCESS_KEY',
+  'AWS_REGION',
   //'DATABASE_URL',
   // 'JWT_SECRET',
   // 'REDIS_URL'
