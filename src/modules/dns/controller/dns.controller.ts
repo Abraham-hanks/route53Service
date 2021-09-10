@@ -1,10 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CHANGE_RESOURCE_RECORD_SETS_ACTION } from '../constants';
 import { CreateHostedZoneDto } from '../dto/create-hosted-zone.dto';
 import { CreateRecordDto } from '../dto/create-record.dto';
 import { HostedZoneQueryFiltersDto } from '../dto/hosted-zone-query-filters.dto';
-import { CloudfrontService } from '../services/cloudfront.service';
 import { DnsService } from '../services/dns.service';
 
 @ApiTags('DNS')
